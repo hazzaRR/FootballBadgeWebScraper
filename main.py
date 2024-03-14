@@ -1,5 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
+import os
+import re
 
 
 DATE_FORMAT_STRING = "%d %b %Y"
@@ -27,14 +29,7 @@ def get_all_english_football_teams():
 
     for team in teamTable:
         team_details = team.find_all('td')
-        # print(team_details[0].a['href'])
-        # print(team_details[0].text.strip().strip())
-        # print(team_details[1].text.strip())
-
-        teams.append((team_details[0].a['href'], team_details[0].text.strip().replace(" F.C.", ""), team_details[1].text.strip()))
-        # print("*************")
-
-    # seasons = match_content.find('ul', class_="linkList").find_all('li')
+        teams.append((team_details[0].a['href'].replace("https://en.m.wikipedia.org", ""), team_details[0].text.strip().replace(" F.C.", ""), team_details[1].text.strip()))
         
     return teams
 
@@ -61,11 +56,28 @@ def save_image_from_url(filename, img_url):
     # get the image from the url
     img_data = requests.get(f"https:{img_url}").content 
 
+    #creates png file named as club name and write image content to it
     with open(f'{filename}.png', 'wb') as handler: 
         handler.write(img_data) 
 
 
 if __name__ == "__main__":
+    CURRENT_PATH = os.getcwd()
+
     teams = get_all_english_football_teams()
-    img_url = get_club_badge_src("Derby County", "/wiki/Derby_County_F.C.")
-    save_image_from_url("Derby County", img_url)
+
+    for team in teams:
+        img_url = get_club_badge_src(team[0])
+        league_name = re.sub(r'\(\d+\)', '', team[2])
+        path_to_save = os.path.join(CURRENT_PATH, "Badges", league_name.strip())
+
+        if not os.path.exists(path_to_save):
+            os.makedirs(path_to_save)
+
+        save_image_from_url(f"{path_to_save}\{team[1]}", img_url)
+
+    # img_url = get_club_badge_src("/wiki/Leyton_Orient_F.C.")
+    # path_to_save = os.path.join(CURRENT_PATH, "Badges", "EFL League One")
+    # save_image_from_url(f"{path_to_save}\Leyton Orient", img_url)
+
+
