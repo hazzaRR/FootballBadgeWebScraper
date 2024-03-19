@@ -69,12 +69,14 @@ if __name__ == "__main__":
     for team in teams:
         img_url = get_club_badge_src(team[0])
         league_name = re.sub(r'\(\d+\)', '', team[2])
-        path_to_save = os.path.join(CURRENT_PATH, "Badges", league_name.strip())
+        # path_to_save = os.path.join(CURRENT_PATH, "Badges", league_name.strip())
+        path_to_save = os.path.join(CURRENT_PATH, "Badges")
 
         if not os.path.exists(path_to_save):
             os.makedirs(path_to_save)
 
-        save_image_from_url(f"{path_to_save}\{team[1]}", img_url)
+        team_name = team[1].replace(".", "")
+        save_image_from_url(f"{path_to_save}\{team_name}", img_url)
 
     # img_url = get_club_badge_src("/wiki/Leyton_Orient_F.C.")
     # path_to_save = os.path.join(CURRENT_PATH, "Badges", "EFL League One")
