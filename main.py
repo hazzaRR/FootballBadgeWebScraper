@@ -29,7 +29,7 @@ def get_all_english_football_teams():
 
     for team in teamTable:
         team_details = team.find_all('td')
-        teams.append((team_details[0].a['href'].replace("https://en.m.wikipedia.org", ""), team_details[0].text.strip().replace(" F.C.", ""), team_details[1].text.strip()))
+        teams.append((team_details[0].a['href'].replace("https://en.m.wikipedia.org", ""), team_details[0].text.strip().replace(" AFC", "").replace(" A.F.C.", "").replace(" F.C.", ""), team_details[1].text.strip()))
         
     return teams
 
@@ -75,7 +75,7 @@ if __name__ == "__main__":
         if not os.path.exists(path_to_save):
             os.makedirs(path_to_save)
 
-        team_name = team[1].replace(".", "")
+        team_name = team[1]
         save_image_from_url(f"{path_to_save}\{team_name}", img_url)
 
     # img_url = get_club_badge_src("/wiki/Leyton_Orient_F.C.")
