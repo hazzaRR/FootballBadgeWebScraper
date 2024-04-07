@@ -29,7 +29,7 @@ def get_all_english_football_teams():
 
     for team in teamTable:
         team_details = team.find_all('td')
-        teams.append((team_details[0].a['href'].replace("https://en.m.wikipedia.org", ""), team_details[0].text.strip().replace(" AFC", "").replace(" A.F.C.", "").replace(" F.C.", ""), team_details[1].text.strip()))
+        teams.append((team_details[0].a['href'].replace("https://en.m.wikipedia.org", ""), team_details[0].text.replace(".", "").replace("AFC", "").replace("FC", "").strip(), team_details[1].text.strip()))
         
     return teams
 
